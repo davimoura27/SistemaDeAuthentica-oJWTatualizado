@@ -3,6 +3,7 @@ package com.exercicio.java.java.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,6 +32,9 @@ public class UserController {
         } catch (EmailExistenteException e) {
 
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Email ja existente!");
+        } catch (BadCredentialsException e) {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Senha de confirmação incorreta!");
         }
 
     }

@@ -29,6 +29,9 @@ public class UserDTO {
     @NotBlank(message = "O campo email é obrigatorio!")
     private String email;
 
+    @NotBlank(message = "O campo confirmPassword é obrigatorio!")
+    private String confirmPassword;
+
     @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=]).{8,}$",
      message = "A senha deve conter pelo menos 1 numero 1 letra 1 caracter 8 digitos")
     private String password;

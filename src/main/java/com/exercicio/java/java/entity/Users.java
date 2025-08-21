@@ -38,7 +38,7 @@ public class Users {
    private String email;
 
    @Column
-   private String resetPassword;
+   private String confirmPassword;
 
    @Column
    @NotBlank
