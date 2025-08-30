@@ -8,11 +8,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import com.exercicio.java.java.dto.LoginDTO;
 import com.exercicio.java.java.dto.ResponseLoginDTO;
-import com.exercicio.java.java.securityConfigEJWT.JwtUtil;
+import com.exercicio.java.java.securityConfig.JwtUtil;
 
 @Service
 public class LoginService {
-
   
     private ModelMapper modelMapper = new ModelMapper();
 
@@ -24,18 +23,15 @@ public class LoginService {
 
     public ResponseLoginDTO authService(LoginDTO loginDTO) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),
-                loginDTO.getPassword());
-                
+                loginDTO.getPassword());                
                
-        Authentication auth = authenticationManager.authenticate(authentication);
+        authenticationManager.authenticate(authentication);
                
         String token = jwtUtil.generateToken(loginDTO.getEmail());
 
         ResponseLoginDTO responseLoginDTO = modelMapper.map(loginDTO, ResponseLoginDTO.class);
         responseLoginDTO.setToken(token);
     
-        return responseLoginDTO;
-            
-        
+        return responseLoginDTO;       
     }
 }

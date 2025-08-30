@@ -1,9 +1,6 @@
-package com.exercicio.java.java.securityConfigEJWT;
+package com.exercicio.java.java.securityConfig;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,13 +9,16 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.exercicio.java.java.exception.EmailExistenteException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class JWTFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -29,35 +29,53 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         String header = request.getHeader("Authorization");
-
-        if (header == null || !header.startsWith("Bearer ")) {
+               
+        if (request.getRequestURI().equals("/users/register") || request.getRequestURI().equals("/auth/login")) {
             filterChain.doFilter(request, response);
             return;
-
         }
+        if (header == null || !header.startsWith("Bearer ")) {            
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token ausente!\"}");
+            return;
+        } 
+        
         String token = header.substring(7);
         try {
+
             String email = jwtUtil.extractUser(token);
-            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                
                 UserDetails user = userDetailsService.loadUserByUsername(email);
                 boolean validToken = jwtUtil.validateToken(token, user.getUsername());
+                
                 if (validToken) {
                     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                     user, null, user.getAuthorities());
+                        user, null, user.getAuthorities()
+                    );
+                    
                     authentication.setDetails(new WebAuthenticationDetailsSource()
-                            .buildDetails(request));
-                            SecurityContextHolder.getContext().setAuthentication(authentication);
+                        .buildDetails(request)
+                    );
+                    
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
-
-            }
-
-        } catch (Exception e) {
-            logger.warn(e);
-            filterChain.doFilter(request, response);
+            }  
+        } catch (TokenExpiredException e) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token expirado\"}");
             return;
 
-        }
+        } catch(SignatureVerificationException e){
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.getWriter().write("{\"error\": \"Token incorreto\"}");
+            return;
+
+        } 
        filterChain.doFilter(request, response);
     }
-
 }

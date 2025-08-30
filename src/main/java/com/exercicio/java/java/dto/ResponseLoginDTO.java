@@ -6,6 +6,5 @@ import lombok.Data;
 public class ResponseLoginDTO {
    
     private String email;
-
     private String token;
 }

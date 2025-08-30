@@ -21,7 +21,7 @@ public class Users {
    private Long id;
 
    @Column
-   @NotBlank(message = "O campo nome deve ser preenchido!")
+   @NotBlank(message = "O campo nome é obrigatorio!")
    public String userName;
 
    @NotNull
@@ -37,13 +37,11 @@ public class Users {
    @NotNull(message = "O campo email é obrigatorio!")
    private String email;
 
-   @Column
-   private String confirmPassword;
 
    @Column
    @NotBlank
    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=]).{8,}$",
-    message = "A senha deve conter pelo menos \n 1 numero \n 1 letra \n 1 caracter \n 8 digitos")
+    message = "A senha deve conter pelo menos, 1 numero, 1 letra, 1 caracter e 8 digitos")
    private String password;
 
 }

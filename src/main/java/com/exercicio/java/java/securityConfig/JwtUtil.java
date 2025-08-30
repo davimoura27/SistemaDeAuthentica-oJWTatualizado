@@ -1,4 +1,4 @@
-package com.exercicio.java.java.securityConfigEJWT;
+package com.exercicio.java.java.securityConfig;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -16,6 +16,7 @@ public class JwtUtil {
     private String secretKey;
 
     private Algorithm getAlgorithm() {
+
         return Algorithm.HMAC256(secretKey);
     }
 
@@ -24,7 +25,7 @@ public class JwtUtil {
         return JWT.create()
                 .withSubject(email)
                 .withIssuedAt(new Date())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 5))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 40 * 1000))
                 .sign(getAlgorithm());
     }
 
@@ -38,15 +39,17 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token, String email) {
+
         DecodedJWT decodedJWT = JWT.require(getAlgorithm())
                 .build()
                 .verify(token);
+
         String getUser = decodedJWT.getSubject();
         Date expiretionData = decodedJWT.getExpiresAt();
+
         return decodedJWT != null
                 && getUser.equals(email)
                 && expiretionData != null
                 && expiretionData.after(new Date());
     }
-
 }

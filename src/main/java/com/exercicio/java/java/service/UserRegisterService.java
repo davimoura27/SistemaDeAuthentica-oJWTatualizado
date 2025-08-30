@@ -19,27 +19,23 @@ public class UserRegisterService {
 
     @Autowired
     private UserRepository userRepository;
+
     private ModelMapper modelMapper = new ModelMapper();
 
     public ResponseUserDTO createUser(UserDTO userDTO) {
-        Users newUser = modelMapper.map(userDTO, Users.class);
-        Optional<Users> emailExistent = userRepository.findByEmail(newUser.getEmail());
-
-        if (emailExistent.isPresent()) {
-            throw new EmailExistenteException("Email ja existente!");
-
+        Users user = modelMapper.map(userDTO, Users.class);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new EmailExistenteException();
         }
 
         if (!userDTO.getPassword().equals(userDTO.getConfirmPassword())) {
             throw new BadCredentialsException("Senha de confirmação incorreta!");
         }
 
-        String encodedPassword = new BCryptPasswordEncoder().encode(newUser.getPassword());
-        newUser.setPassword(encodedPassword);
-        userRepository.save(newUser);
-        ResponseUserDTO dtoUser = modelMapper.map(newUser, ResponseUserDTO.class);
+        String encodedPassword = new BCryptPasswordEncoder().encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
 
-        return dtoUser;
+        return modelMapper.map(user, ResponseUserDTO.class);
     }
-
 }

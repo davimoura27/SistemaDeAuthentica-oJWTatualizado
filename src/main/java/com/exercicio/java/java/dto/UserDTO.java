@@ -17,13 +17,15 @@ public class UserDTO {
     private String userName;
 
     @NotBlank(message = "O campo telephone é obrigatorio!")
-    @Pattern(regexp = "^\\d{11}$", message = "o telefone deve conter 11 digitos numericos incluindo DDD")
+    @Pattern(
+        regexp = "^\\d{11}$", 
+        message = "o telefone deve conter 11 digitos numericos incluindo DDD"
+    )
     private String telephone;
 
     @NotNull(message = "A data é obrigatoria e deve estar no foramto dd/mm/yyyy")
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dateBirth;
-
 
     @Email(message = "Formato de email invalido!")
     @NotBlank(message = "O campo email é obrigatorio!")
@@ -32,7 +34,9 @@ public class UserDTO {
     @NotBlank(message = "O campo confirmPassword é obrigatorio!")
     private String confirmPassword;
 
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=]).{8,}$",
-     message = "A senha deve conter pelo menos 1 numero 1 letra 1 caracter 8 digitos")
+    @Pattern(
+        regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[@#$%^&+=]).{8,}$",
+        message = "A senha deve conter pelo menos 1 numero 1 letra 1 caracter 8 digitos"
+    )
     private String password;
 }
