@@ -4,11 +4,13 @@ import { loginUser } from "../Api/Api"
 import { ToastNotify } from "../ToastNotify/Toast"
 import { ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom"
+import { EyeSlash,Eye, User} from "phosphor-react";
 
 export function Login(){
     const navigate = useNavigate();
     const[email,setEmail] = useState('');
     const[password, setPassword] = useState('');
+    const[showPassword, setShowPassword] = useState(false);
 
     const handle = async (e) =>{
         e.preventDefault();      
@@ -26,7 +28,10 @@ export function Login(){
                 : error = response.response.data 
                     
             ToastNotify.error(error)
-        }                                    
+        }
+    }
+    const passwordEyes = () =>{
+        setShowPassword((prev) => !prev)
     }
     return(<>
         <ToastContainer
@@ -36,26 +41,54 @@ export function Login(){
             <div className={styles.body}>
                 <div className={styles.title}>
                     <h2>
-                        Bem vido a tela de login!
+                        Bem vido ao login
                     </h2>
+                    <p>
+                        Preencha os campos para acessar
+                    </p>
                 </div>
                 <div className={styles.formulario}>
                     <form onSubmit={handle}>
                         <div className={styles.inputContainer}>
-                            <input 
-                            id="email"
-                            type="text" 
-                            placeholder="E-mail"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <input 
-                            id="senha" 
-                            type="password" 
-                            placeholder="Senha"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            />
+                            <div className={styles.inputStyles}>
+                                <label htmlFor="email">Usuario</label>
+                                <div className={styles.containerIconInput}>
+                                    <User weight="fill" className={styles.userIcon} />
+                                    <input 
+                                    id="email"
+                                    type="text" 
+                                    placeholder="usuario@gmail.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    />
+
+                                </div>
+                            </div>
+                            <div className={styles.inputStyles}>
+                                <label htmlFor="senha">Senha</label>
+                                <div className={styles.containerIconInput}>
+                                {showPassword ? (
+                                    <EyeSlash
+                                        weight="fill"
+                                        className={styles.userIcon}
+                                        onClick={passwordEyes}
+                                    />
+                                ) : (
+                                    <Eye
+                                        weight="fill"
+                                        className={styles.userIcon}
+                                        onClick={passwordEyes}
+                                    />
+                                )}
+                                <input 
+                                id="senha" 
+                                type={showPassword ? "text":"password"} 
+                                placeholder="senha de acesso"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                />                               
+                            </div>    
+                            </div>
                         </div>
                         <div className={styles.buttonContainer}>
                             <button type="submit">Entrar</button>

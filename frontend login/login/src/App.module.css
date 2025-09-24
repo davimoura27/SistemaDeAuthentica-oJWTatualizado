@@ -5,6 +5,7 @@ body,
   margin: 0;
   height: 100%;
   overflow: hidden;
+  font-family: Arial, sans-serif;
   
  
 }
@@ -20,7 +21,7 @@ body,
   justify-content: center;
   width: 100%;
   height: 100dvh;
-  background-image: url("/src/assets/papelFundoLogin.jpg");
+  background: linear-gradient(135deg, #191970, #1E3A8A);
   background-size: cover;
 
 }
