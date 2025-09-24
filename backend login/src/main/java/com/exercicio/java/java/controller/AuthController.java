@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.exercicio.java.java.dto.LoginDTO;
-import com.exercicio.java.java.dto.ResponseLoginDTO;
 import com.exercicio.java.java.service.LoginService;
 
 import jakarta.validation.Valid;
@@ -23,19 +22,14 @@ public class AuthController {
 
    @PostMapping("/login")
    public ResponseEntity<?> authController(@Valid @RequestBody LoginDTO loginDTO) {
-      try {
-         ResponseLoginDTO newLoginDTO = loginService.authService(loginDTO);
-         return ResponseEntity.ok().body(newLoginDTO);
+      try {         
+         return ResponseEntity.ok().body(loginService.authService(loginDTO));
 
-       } catch (BadCredentialsException e) {
-
+      } catch (BadCredentialsException e) {
          return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciais incorretas ou usuario não registrado!");
 
       } catch (Exception e) {
-
          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidro");
       }
-
    }
-
 }
