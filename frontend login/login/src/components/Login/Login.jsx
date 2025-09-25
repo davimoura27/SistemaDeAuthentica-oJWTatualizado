@@ -41,7 +41,7 @@ export function Login(){
             <div className={styles.body}>
                 <div className={styles.title}>
                     <h2>
-                        Bem vido ao login
+                        Bem vindo ao login
                     </h2>
                     <p>
                         Preencha os campos para acessar
